@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id    String @id @default(cuid())
+  name  String
+  age   Int
+  email String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Clinics {
+  id        String   @id @default(cuid())
+  name      String
+  appointment Appointments[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Doctors {
+  id                    String   @id @default(cuid())
+  name                  String
+  avatarImg             String
+  speciality            String
+  availableFromWeekDay  Int
+  availableToWeekDay    Int
+  availableFromTime     String
+  availableToTime       String
+  appointmentPriceDents Int
+  appointment Appointments[]
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @default(now())
+}
+
+enum Gender {
+  FEM
+  MASC
+  OUTRO
+}
+
+model Patients {
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  phoneNumber String   @unique
+  gender      Gender
+  appointment Appointments[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
+
+model Appointments {
+  id String @id @default(cuid())
+  date DateTime
+
+  patientId String
+  patient Patients @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  doctorId String
+  doctor Doctors @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  clinicId String
+  clinic Clinics @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+}
