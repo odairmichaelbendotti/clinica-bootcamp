@@ -1,12 +1,14 @@
-"use client"
 import { useForm } from "react-hook-form"
 import { RegisterFormData } from "../_utils/registerSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { registerSchema } from "../_utils/registerSchema";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { registerSchema } from "../_utils/registerSchema"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { signUp } from "@/lib/auth-client"
+import { LoaderCircle } from 'lucide-react'
+import { useRouter } from "next/navigation"
 
 const SignUp = () => {
     const form = useForm<RegisterFormData>({
@@ -18,9 +20,19 @@ const SignUp = () => {
         }
     })
 
-    function onSubmit(values: RegisterFormData) {
-        console.log(values)
-        alert('clicou nessa porra')
+    const router = useRouter()
+
+    async function onSubmit(values: RegisterFormData) {
+        const { } = await signUp.email({
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            callbackURL: "/dashboard"
+        }, {
+            onSuccess: () => {
+                router.push('/dashboard')
+            }
+        })
     }
 
     return (
@@ -75,7 +87,12 @@ const SignUp = () => {
 
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" className="cursor-pointer w-full">Cadastrar</Button>
+                    <Button
+                        type="submit"
+                        className="cursor-pointer w-full"
+                        disabled={form.formState.isSubmitting}>
+                        {form.formState.isSubmitting && <LoaderCircle className="animate-spin" />}Criar conta
+                    </Button>
                 </CardFooter>
             </form>
         </Form>

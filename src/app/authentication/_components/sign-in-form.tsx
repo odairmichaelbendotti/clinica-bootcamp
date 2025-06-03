@@ -1,10 +1,12 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { loginSchema, LoginFormData } from './../_utils/loginSchema';
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { loginSchema, LoginFormData } from './../_utils/loginSchema'
+import { signIn } from "@/lib/auth-client"
+import { LoaderCircle } from 'lucide-react'
 
 const SignIn = () => {
     const form = useForm<LoginFormData>({
@@ -15,9 +17,12 @@ const SignIn = () => {
         }
     })
 
-    function onSubmit(values: LoginFormData) {
-        console.log(values)
-        alert('clicou nessa porra')
+    async function onSubmit(values: LoginFormData) {
+        const { } = await signIn.email({
+            email: values.email,
+            password: values.password,
+            callbackURL: "/dashboard"
+        })
     }
 
     return (
@@ -59,7 +64,11 @@ const SignIn = () => {
                     />
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" className="w-full cursor-pointer">Entrar</Button>
+                    <Button
+                        type="submit" className="w-full cursor-pointer"
+                        disabled={form.formState.isSubmitting}>
+                        {form.formState.isSubmitting && <LoaderCircle className="animate-spin" />} Entrar
+                    </Button>
                 </CardFooter>
             </form>
         </Form>
