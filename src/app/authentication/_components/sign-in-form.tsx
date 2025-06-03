@@ -27,8 +27,11 @@ const SignIn = () => {
             onSuccess: () => {
                 toast.success('Login realizado com sucesso')
             },
-            onError: () => {
-                toast('Erro ao realizar login')
+            onError: (ctx) => {
+                if (ctx.error.code === 'INVALID_EMAIL_OR_PASSWORD') {
+                    console.log(ctx)
+                    toast('Informações de login inválidas')
+                }
             }
         })
     }

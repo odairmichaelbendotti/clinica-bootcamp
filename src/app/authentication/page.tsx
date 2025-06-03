@@ -3,8 +3,17 @@ import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import SignIn from "./_components/sign-in-form"
 import SignUp from "./_components/sign-up-form"
+import { useRouter } from "next/navigation"
+import { useSession } from '@/lib/auth-client'
 
 const AuthenticationPage = () => {
+    const router = useRouter()
+    const { data: session } = useSession();
+
+    if (session?.user) {
+        router.push('/dashboard')
+    }
+
     return (
         <div className="h-screen flex items-center justify-center">
             <div className="flex w-full max-w-sm flex-col gap-6">
