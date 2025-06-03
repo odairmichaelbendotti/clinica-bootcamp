@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner"
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -11,6 +12,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="pt-BR">
       <body className={`antialiased`} suppressHydrationWarning>
         {children}
+        <Toaster position="top-right" richColors theme="light" />
       </body>
     </html>
   );

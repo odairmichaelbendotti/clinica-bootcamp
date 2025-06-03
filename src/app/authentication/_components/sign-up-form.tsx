@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { signUp } from "@/lib/auth-client"
 import { LoaderCircle } from 'lucide-react'
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 const SignUp = () => {
     const form = useForm<RegisterFormData>({
@@ -30,7 +31,11 @@ const SignUp = () => {
             callbackURL: "/dashboard"
         }, {
             onSuccess: () => {
+                toast.success('Conta criada com sucesso')
                 router.push('/dashboard')
+            },
+            onError: () => {
+                toast.error('Erro ao realizar cadastro')
             }
         })
     }

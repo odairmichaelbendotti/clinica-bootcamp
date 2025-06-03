@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { loginSchema, LoginFormData } from './../_utils/loginSchema'
 import { signIn } from "@/lib/auth-client"
 import { LoaderCircle } from 'lucide-react'
+import { toast } from "sonner"
 
 const SignIn = () => {
     const form = useForm<LoginFormData>({
@@ -22,6 +23,13 @@ const SignIn = () => {
             email: values.email,
             password: values.password,
             callbackURL: "/dashboard"
+        }, {
+            onSuccess: () => {
+                toast.success('Login realizado com sucesso')
+            },
+            onError: () => {
+                toast('Erro ao realizar login')
+            }
         })
     }
 
