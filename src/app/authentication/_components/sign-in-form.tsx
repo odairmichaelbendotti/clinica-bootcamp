@@ -8,6 +8,9 @@ import { loginSchema, LoginFormData } from './../_utils/loginSchema'
 import { signIn } from "@/lib/auth-client"
 import { LoaderCircle } from 'lucide-react'
 import { toast } from "sonner"
+import { Separator } from "@/components/ui/separator"
+import { FcGoogle } from "react-icons/fc"
+import { handleGoogleLogin } from "@/lib/auth-client"
 
 const SignIn = () => {
     const form = useForm<LoginFormData>({
@@ -74,11 +77,17 @@ const SignIn = () => {
                         )}
                     />
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex flex-col gap-4">
                     <Button
                         type="submit" className="w-full cursor-pointer"
                         disabled={form.formState.isSubmitting}>
                         {form.formState.isSubmitting && <LoaderCircle className="animate-spin" />} Entrar
+                    </Button>
+
+                    <Separator />
+
+                    <Button className="w-full cursor-pointer" variant="outline" type="button" onClick={handleGoogleLogin}>
+                        <FcGoogle size={30} />
                     </Button>
                 </CardFooter>
             </form>
