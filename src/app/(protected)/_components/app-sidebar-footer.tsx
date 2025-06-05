@@ -4,8 +4,9 @@ import React from 'react'
 import { LogOut } from 'lucide-react'
 import { signOut } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
+import { AppSidebarProps } from './app-sidebar'
 
-const AppSidebarFooter = () => {
+const AppSidebarFooter = ({ user, clinic }: AppSidebarProps) => {
     const router = useRouter()
     const handleLogOut = () => {
         signOut()
@@ -14,10 +15,13 @@ const AppSidebarFooter = () => {
 
     return (
         <SidebarFooter>
-            <div className='flex w-full items-center gap-4'>
+            <div className='flex w-full items-center gap-4 mb-1'>
                 <div className='w-10 h-10 bg-blue-500 rounded-full'></div>
                 <div className='flex  items-center  justify-between flex-1'>
-                    <p className='text-sm'>Olá, Odair</p>
+                    <div>
+                        <p className='text-xs font-bold'>{"error" in clinic ? user.name : clinic.name}</p>
+                        <p className='text-xs'>{user.email}</p>
+                    </div>
                     <LogOut size={15} className='cursor-pointer' onClick={handleLogOut} />
                 </div>
             </div>
