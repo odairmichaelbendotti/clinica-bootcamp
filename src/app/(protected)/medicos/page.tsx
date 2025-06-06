@@ -1,9 +1,28 @@
-import { Button } from "@/components/ui/button";
-import { Header, HeaderActions, HeaderContent, HeaderDescription, HeaderTitle, Page, PageContent } from "@/components/ui/page-container";
-import { UserRoundPlus } from "lucide-react";
-import AddMedic from "./_components/add-medic";
+import { Button } from "@/components/ui/button"
+import { Header, HeaderActions, HeaderContent, HeaderDescription, HeaderTitle, Page, PageContent } from "@/components/ui/page-container"
+import { UserRoundPlus } from "lucide-react"
+import AddMedic from "./_components/add-medic"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
+import { redirect } from "next/navigation"
+import { getClinicByUser } from "@/_actions/clinic-by-user-id"
+import { getAllDoctorsByUserId } from "@/_actions/get-all-doctors"
+import { Doctors } from "@/generated/prisma"
+import DoctorCard from "./_components/doctor-card"
 
-const Medicos = () => {
+const Medicos = async () => {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+
+    if (!session?.user) redirect('/authentication')
+
+    const userHasAClinic = await getClinicByUser(session.user.id)
+
+    if (!userHasAClinic) redirect('/clinic-form')
+
+    const doctors = await getAllDoctorsByUserId() as Doctors[]
+
     return (
         <Page>
             <Header>
@@ -18,11 +37,13 @@ const Medicos = () => {
                 </HeaderActions>
             </Header>
 
-            <PageContent>
-                <p className="w-full bg-red-500">Aqui</p>
-                <p>Aqui</p>
-                <p>Aqui</p>
-                <p>Aqui</p>
+            <PageContent doctors={doctors}>
+                {doctors.length === 0 && <p className="p-2">Sua clínica ainda não possui médicos cadastrados.</p>}
+                {doctors.length > 0 && (
+                    doctors.map((item) => (
+                        <DoctorCard key={item.id} />
+                    ))
+                )}
             </PageContent>
 
         </Page>

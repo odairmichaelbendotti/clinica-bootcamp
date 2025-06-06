@@ -1,7 +1,9 @@
+import { Doctors } from "@/generated/prisma"
 import { ReactNode } from "react"
 
 interface ChildrenProps {
     children: ReactNode
+    doctors?: Doctors[]
 }
 
 export const Page = ({ children }: ChildrenProps) => {
@@ -28,6 +30,6 @@ export const HeaderActions = ({ children }: ChildrenProps) => {
     return <div className="flex items-center gap-2">{children}</div>
 }
 
-export const PageContent = ({ children }: ChildrenProps) => {
-    return <div className="mt-6 bg-white p-2 flex-1 rounded-sm grid grid-cols-4 gap-3">{children}</div>
+export const PageContent = ({ children, doctors }: ChildrenProps) => {
+    return <div className={`mt-6 bg-white p-2 flex-1 rounded-sm ${doctors?.length === 0 ? '' : 'grid grid-cols-4'} gap-3`}>{children}</div>
 }   

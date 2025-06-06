@@ -5,14 +5,17 @@ import SignIn from "./_components/sign-in-form"
 import SignUp from "./_components/sign-up-form"
 import { useRouter } from "next/navigation"
 import { useSession } from '@/lib/auth-client'
+import { useEffect } from "react"
 
 const AuthenticationPage = () => {
     const router = useRouter()
     const { data: session } = useSession();
 
-    if (session?.user) {
-        router.push('/dashboard')
-    }
+    useEffect(() => {
+        if (session?.user) {
+            router.push('/dashboard')
+        }
+    }, [session, router])
 
     return (
         <div className="h-screen flex items-center justify-center">

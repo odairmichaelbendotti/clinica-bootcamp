@@ -5,7 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Loader2, UserRoundPlus } from "lucide-react"
 import { AddMedicSchema } from "../_utils/schema"
 import { AddMedicFormData } from "../_utils/schema"
-import { useForm } from "react-hook-form"
+import { FieldErrors, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -13,9 +13,9 @@ import { medicalSpecialtiesOptions } from "../_utils/speciality"
 import { NumericFormat } from 'react-number-format'
 import { daysConverted } from "../_utils/days"
 import { convertedTimes } from "../_utils/times"
-import { addNewDoctor } from "@/_actions/create-medic"
-import { useState } from "react"
+import { addNewDoctor } from "@/_actions/create-doctor"
 import { toast } from "sonner"
+import { useState } from "react"
 
 const AddMedic = () => {
     const [open, setOpen] = useState(false)
@@ -33,12 +33,36 @@ const AddMedic = () => {
     })
 
     const onSubmit = async (values: AddMedicFormData) => {
-        const doctor = await addNewDoctor(values)
 
-        if (!doctor) return { error: "Erro ao cadastrar médico" }
+        const doctorData = {
+            name: values.name,
+            speciality: values.speciality,
+            availableFromWeekDay: values.availableFromWeekDay,
+            availableToWeekDay: values.availableToWeekDay,
+            availableFromTime: values.availableFromTime,
+            availableToTime: values.availableToTime,
+            appointmentPriceDents: values.appointmentPriceDents,
+        };
 
-        toast.success('Médico cadastrado com sucesso')
-        setOpen(false)
+        try {
+            const doctor = await addNewDoctor(doctorData);
+
+            if (!doctor) {
+                toast.error('Erro ao cadastrar médico');
+                return;
+            }
+
+            toast.success('Médico cadastrado com sucesso!');
+            setOpen(false);
+            form.reset()
+        } catch (error) {
+            toast.error('Ocorreu um erro ao cadastrar o médico');
+            console.error(error);
+        }
+    }
+
+    const onError = (errors: FieldErrors<AddMedicFormData>) => {
+        console.log(errors)
     }
 
     return (
@@ -49,7 +73,7 @@ const AddMedic = () => {
             <DialogContent>
                 <DialogTitle className="text-xl text-center font-bold">Inserir médico</DialogTitle>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
 
                         {/* Nome */}
                         <FormField
