@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { UserRoundPlus } from "lucide-react"
+import { Loader2, UserRoundPlus } from "lucide-react"
 import { AddMedicSchema } from "../_utils/schema"
 import { AddMedicFormData } from "../_utils/schema"
 import { useForm } from "react-hook-form"
@@ -13,37 +13,38 @@ import { medicalSpecialtiesOptions } from "../_utils/speciality"
 import { NumericFormat } from 'react-number-format'
 import { daysConverted } from "../_utils/days"
 import { convertedTimes } from "../_utils/times"
+import { addNewDoctor } from "@/_actions/create-medic"
+import { useState } from "react"
+import { toast } from "sonner"
 
 const AddMedic = () => {
+    const [open, setOpen] = useState(false)
     const form = useForm<AddMedicFormData>({
         resolver: zodResolver(AddMedicSchema),
         defaultValues: {
             name: '',
-            avatarImg: '',
             speciality: '',
             availableFromWeekDay: '',
             availableToWeekDay: '',
             availableFromTime: '',
             availableToTime: '',
-            appointmentPriceDents: 0,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            appointmentPriceDents: 0
         }
     })
 
-    const onSubmit = (values: AddMedicFormData) => {
-        const processedValues = {
-            ...values,
-            availableFromWeekDay: Number(values.availableFromWeekDay),
-            availableToWeekDay: Number(values.availableToWeekDay),
-        }
-        console.log(processedValues)
+    const onSubmit = async (values: AddMedicFormData) => {
+        const doctor = await addNewDoctor(values)
+
+        if (!doctor) return { error: "Erro ao cadastrar médico" }
+
+        toast.success('Médico cadastrado com sucesso')
+        setOpen(false)
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="cursor-pointer"><UserRoundPlus />Adicionar médicos</Button>
+                <Button className="cursor-pointer" onClick={() => setOpen(true)}><UserRoundPlus />Adicionar médicos</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogTitle className="text-xl text-center font-bold">Inserir médico</DialogTitle>
@@ -210,7 +211,10 @@ const AddMedic = () => {
                             />
                         </div>
 
-                        <Button className="w-full cursor-pointer">Cadastrar</Button>
+                        <Button className="w-full cursor-pointer">
+                            {form.formState.isSubmitting && <Loader2 />}
+                            Cadastrar
+                        </Button>
                     </form>
                 </Form >
             </DialogContent>

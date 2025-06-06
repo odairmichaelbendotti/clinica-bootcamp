@@ -39,10 +39,10 @@ model Clinics {
 model Doctors {
   id                    String         @id @default(cuid())
   name                  String
-  avatarImg             String
+  avatarImg             String?
   speciality            String
-  availableFromWeekDay  Int
-  availableToWeekDay    Int
+  availableFromWeekDay  String
+  availableToWeekDay    String
   availableFromTime     String
   availableToTime       String
   appointmentPriceDents Int
