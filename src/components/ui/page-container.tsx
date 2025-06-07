@@ -31,5 +31,5 @@ export const HeaderActions = ({ children }: ChildrenProps) => {
 }
 
 export const PageContent = ({ children, doctors }: ChildrenProps) => {
-    return <div className={`mt-6 bg-white p-2 flex-1 rounded-sm ${doctors?.length === 0 ? '' : 'grid grid-cols-4'} gap-3`}>{children}</div>
+    return <div className={`mt-6 bg-white p-2 flex-1 rounded-sm ${doctors?.length === 0 ? '' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'} gap-3`}>{children}</div>
 }   

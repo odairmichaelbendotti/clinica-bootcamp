@@ -4,6 +4,7 @@ import { AddMedicSchema, AddMedicFormData } from "@/app/(protected)/medicos/_uti
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { getUserAndClinicId } from "../getUserAndClinicId"
+import { revalidatePath } from "next/cache"
 
 export const addNewDoctor = async (data: AddMedicFormData) => {
     try {
@@ -31,6 +32,7 @@ export const addNewDoctor = async (data: AddMedicFormData) => {
         })
 
         if (!doctor) return null
+        revalidatePath('/medicos')
         return doctor
     } catch (err) {
         console.log(err)

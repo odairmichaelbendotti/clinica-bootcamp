@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { getClinicByUser } from "@/_actions/clinic-by-user-id"
-import { getAllDoctorsByUserId } from "@/_actions/get-all-doctors"
+import { getAllDoctorsByUserId } from "@/_actions/get-all-doctors-by-user-id"
 import { Doctors } from "@/generated/prisma"
 import DoctorCard from "./_components/doctor-card"
 
@@ -33,7 +33,7 @@ const Medicos = async () => {
                 <HeaderActions>
                     <Button className="cursor-pointer" variant="outline"><UserRoundPlus />Ordenar</Button>
                     <Button className="cursor-pointer" variant="outline"><UserRoundPlus />Filtrar</Button>
-                    <AddMedic />
+                    <AddMedic title='Adicionar médico' />
                 </HeaderActions>
             </Header>
 
@@ -41,7 +41,7 @@ const Medicos = async () => {
                 {doctors.length === 0 && <p className="p-2">Sua clínica ainda não possui médicos cadastrados.</p>}
                 {doctors.length > 0 && (
                     doctors.map((item) => (
-                        <DoctorCard key={item.id} />
+                        <DoctorCard key={item.id} item={item} />
                     ))
                 )}
             </PageContent>

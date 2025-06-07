@@ -27,6 +27,6 @@ const MedicalSpecialty = {
 
 // Object.entries converte um objeto em um array de chave valor:
 export const medicalSpecialtiesOptions = Object.entries(MedicalSpecialty).map(([key, value]) => ({
-    value: key,
-    label: value,
+    key: key,
+    value: value,
 }));

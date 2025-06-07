@@ -9,7 +9,7 @@ export const AddMedicSchema = z.object({
     availableToTime: z.string(),
     appointmentPriceDents: z.number()
 }).refine((data) => {
-    if (data.availableFromTime < data.availableToTime) return true
+    if (Number(data.availableFromTime.split(':')[0]) < Number(data.availableToTime.split(':')[0])) return true
 }, {
     message: "O horário de início não pode ser anterior ao horário de fim",
     path: ["availableToTime"]

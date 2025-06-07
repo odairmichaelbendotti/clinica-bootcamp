@@ -17,7 +17,11 @@ import { addNewDoctor } from "@/_actions/create-doctor"
 import { toast } from "sonner"
 import { useState } from "react"
 
-const AddMedic = () => {
+interface Props {
+    title: string
+}
+
+const AddMedic = ({ title }: Props) => {
     const [open, setOpen] = useState(false)
     const form = useForm<AddMedicFormData>({
         resolver: zodResolver(AddMedicSchema),
@@ -26,8 +30,8 @@ const AddMedic = () => {
             speciality: '',
             availableFromWeekDay: '',
             availableToWeekDay: '',
-            availableFromTime: '',
-            availableToTime: '',
+            availableFromTime: '1',
+            availableToTime: '2',
             appointmentPriceDents: 0
         }
     })
@@ -68,10 +72,10 @@ const AddMedic = () => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="cursor-pointer" onClick={() => setOpen(true)}><UserRoundPlus />Adicionar médicos</Button>
+                <Button className="cursor-pointer" onClick={() => setOpen(true)}><UserRoundPlus />{title}</Button>
             </DialogTrigger>
             <DialogContent>
-                <DialogTitle className="text-xl text-center font-bold">Inserir médico</DialogTitle>
+                <DialogTitle className="text-xl text-center font-bold">{title}</DialogTitle>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
 
@@ -103,7 +107,7 @@ const AddMedic = () => {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {medicalSpecialtiesOptions.map(item => (
-                                                <SelectItem key={item.label} value={item.value}>{item.label}</SelectItem>
+                                                <SelectItem key={item.key} value={item.key}>{item.value}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
@@ -203,7 +207,7 @@ const AddMedic = () => {
                                             </FormControl>
                                             <SelectContent>
                                                 {convertedTimes.map(item => (
-                                                    <SelectItem key={item.label} value={item.value}>{item.label}</SelectItem>
+                                                    <SelectItem key={item.key} value={item.key}>{item.value}</SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
@@ -225,7 +229,7 @@ const AddMedic = () => {
                                             </FormControl>
                                             <SelectContent>
                                                 {convertedTimes.map(item => (
-                                                    <SelectItem key={item.label} value={item.value}>{item.label}</SelectItem>
+                                                    <SelectItem key={item.key} value={item.key}>{item.value}</SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
